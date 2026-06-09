@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class AddTokenFromCookieToHeader
+class ForceJsonResponse
 {
     /**
      * Handle an incoming request.
@@ -15,10 +15,7 @@ class AddTokenFromCookieToHeader
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if(!$request->hasHeader('Authorization') && $request->hasCookie('auth_token')){
-            $token = $request->cookie('auth_token');
-            $request->headers->set('Authorization', 'Bearer ' . $token); 
-        }
+        $request->headers->set('Accept', 'application/json');
         return $next($request);
     }
 }

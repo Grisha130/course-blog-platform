@@ -24,6 +24,9 @@ class User extends Authenticatable
      *
      * @return array<string, string>
      */
+    public function courses(){
+        return $this->hasMany(Course::class);
+    }
     protected function casts(): array
     {
         return [

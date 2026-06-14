@@ -3,8 +3,12 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Course\CourseCommentRequest;
+use App\Http\Requests\Course\FilterRequest;
+use App\Http\Requests\Course\MyCourseFilterRequest;
 use App\Http\Requests\Course\StoreRequest;
 use App\Http\Requests\Course\UpdateRequest;
+use App\Http\Resources\CommentResource;
 use App\Http\Resources\CourseResource;
 use App\Http\Resources\UserResource;
 use App\Http\Traits\ApiResponse;
@@ -19,21 +23,27 @@ class CourseController extends Controller
     public function __construct(
         protected CourseService $course_service
     ) {}
-    public function index()
+    public function index(FilterRequest $request)
     {
-        $courses = $this->course_service->index();
-        return $this->success(
+        $courses = $this->course_service->index($request->validated());
+        return $this->paginate(
             CourseResource::collection($courses),
-            'all courses',
+            'all courses with pagination and filter',
             200
         );
     }
-    public function myCourses(){
-        $courses = $this->course_service->myCourses();
-        return $this->success(CourseResource::collection($courses), 'my courses', 200);
+    public function myCourses(MyCourseFilterRequest $filter)
+    {
+        $courses = $this->course_service->myCourses($filter->validated());
+        return $this->paginate(
+            CourseResource::collection($courses),
+            'my courses',
+            200
+        );
     }
     public function showOne(Course $course)
     {
+        $course->load(['user', 'comments.user']);
         return $this->success(
             new CourseResource($course),
             'one course',
@@ -43,14 +53,12 @@ class CourseController extends Controller
     public function store(StoreRequest $request)
     {
         $course = $this->course_service->store($request->validated(), $request->file('image'));
-        $course->load('user');
         return $this->success(new CourseResource($course), 'created successfully', 201);
     }
-    public function update(Course $course, UpdateRequest $request)
+    public function update(UpdateRequest $request, Course $course)
     {
         $this->authorize('update', $course);
         $course = $this->course_service->update($request->validated(), $course, $request->file('image'));
-        $course->load('user');
         return $this->success(new CourseResource($course), 'course updated', 200);
     }
     public function destroy(Course $course)
@@ -63,14 +71,22 @@ class CourseController extends Controller
             200
         );
     }
-    public function deletedCourses(){
+    public function deletedCourses()
+    {
         $courses = $this->course_service->deletedCourses();
-        return $this->success(CourseResource::collection($courses), 'deleted courses', 200);
+        return $this->paginate(
+            CourseResource::collection($courses),
+            'deleted courses',
+            200
+        );
     }
-    public function restore(Course $course){
+    public function restore(Course $course)
+    {
         $this->authorize('restore', $course);
         $restoredCourse = $this->course_service->restore($course);
-        $restoredCourse->load('user');
-        return $this->success(new CourseResource($restoredCourse), 'restored');
-    }
+        return $this->success(
+            new CourseResource($restoredCourse),
+            'restored'
+        );
+    }   
 }

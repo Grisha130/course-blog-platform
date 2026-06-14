@@ -13,15 +13,24 @@ class Course extends Model
 {
     use SoftDeletes;
     #[Override]
+
     public function getRouteKeyName()
     {
         return 'slug';
     }
-    public function user(){
+
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
+
+    public function comments()
+    {
+        return $this->hasMany(CourseComment::class);
+    }
+
     protected $casts = [
-        'status'=> CourseStatus::class,
-        'published_at'=>'datetime',
-    ]; 
+        'status' => CourseStatus::class,
+        'published_at' => 'datetime',
+    ];
 }

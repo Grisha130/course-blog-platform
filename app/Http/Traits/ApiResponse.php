@@ -25,9 +25,21 @@ trait ApiResponse
             'message' => $message,
         ];
 
-        if(!is_null($errors)){
+        if (!is_null($errors)) {
             $response['errors'] = $errors;
         }
+        return response()->json($response, $status);
+    }
+    public function paginate($collection, string $message = '', int $status = 200)
+    {
+        $resourceData = $collection->response()->getData(true);
+        $response = [
+            'success' => true,
+            'message' => $message,
+            'data'=>$resourceData['data'] ?? [],
+            'links'=>$resourceData['links'] ?? null,
+            'meta'=>$resourceData['meta'] ?? null,
+        ];
         return response()->json($response, $status);
     }
 }

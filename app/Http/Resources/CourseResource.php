@@ -25,6 +25,7 @@ class CourseResource extends JsonResource
             'published_at' => $this->published_at,
             'created_at' => $this->created_at->toIso8601String(),
             'author' => new UserResource($this->user),
+            'comments'=>CommentResource::collection($this->comments),
         ];
     }
 }

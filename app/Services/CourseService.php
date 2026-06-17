@@ -6,7 +6,6 @@ use App\Enums\CourseStatus;
 use App\Filters\CourseFilter;
 use App\Http\Resources\UserResource;
 use App\Models\Course;
-use App\Models\CourseComment;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -22,18 +21,18 @@ class CourseService
         $query = Course::where('status', CourseStatus::PUBLISHED->value);
         $query = $this->filter->courseFilter($query, $filters);
         return $query
-            ->with(['user', 'comments.user']) 
+            ->with(['user', 'comments.user'])
             ->paginate(10)
             ->withQueryString();
     }
-   
+
     public function myCourses(array $filters = [])
     {
 
         $query = auth()->user()->courses()->getQuery();
         $query = $this->filter->myCourseFilter($query, $filters);
         return $query
-            ->with(['user', 'comments.user']) 
+            ->with(['user', 'comments.user'])
             ->paginate(10)
             ->withQueryString();
     }
@@ -61,9 +60,14 @@ class CourseService
             }
             $data['image'] = $imageFile->store('courseImage', 'public');
         }
-        if (isset($data['status']) && $data['status'] === CourseStatus::PUBLISHED->value) {
-            $data['published_at'] = now();
+        if (isset($data['status'])) {
+            if ($data['status'] === CourseStatus::PUBLISHED->value) {
+                $data['published_at'] = now();
+            }else{
+                $data['published_at'] = null; 
+            }
         }
+
         $course->update($data);
         return $course->load(['user', 'comments.user']);
     }
@@ -72,7 +76,7 @@ class CourseService
         return auth()->user()
             ->courses()
             ->onlyTrashed()
-            ->with(['user', 'comments.user']) 
+            ->with(['user', 'comments.user'])
             ->paginate(10);
     }
     public function restore(Course $course)
@@ -85,7 +89,7 @@ class CourseService
         $user = auth()->user();
         return $user->courses()
             ->where('status', CourseStatus::ARCHIVED->value)
-            ->with(['user', 'comments.user']) 
+            ->with(['user', 'comments.user'])
             ->paginate(10);
     }
 }

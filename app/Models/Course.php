@@ -32,5 +32,6 @@ class Course extends Model
     protected $casts = [
         'status' => CourseStatus::class,
         'published_at' => 'datetime',
+        'is_active' => 'boolean',
     ];
 }

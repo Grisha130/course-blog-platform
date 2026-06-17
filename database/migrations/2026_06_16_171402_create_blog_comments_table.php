@@ -11,27 +11,21 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('courses', function (Blueprint $table) {
+        Schema::create('blog_comments', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
-            $table->string('slug')->unique();
-            $table->text('description')->nullable();
-            $table->string('image')->nullable();
-            $table->decimal('price', 8, 2)->default(0.00);
-            $table->string('status')->default('draft');
-            $table->boolean('is_active')->default(true);
+            $table->string('comment');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->timestamp('published_at')->nullable();
+            $table->foreignId('blog_id')->constrained()->onDelete('cascade');
             $table->softDeletes();
             $table->timestamps();
         });
-    }   
+    }
 
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropIfExists('courses');
+        Schema::dropIfExists('blog_comments');
     }
 };

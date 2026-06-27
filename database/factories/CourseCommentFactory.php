@@ -17,9 +17,9 @@ class CourseCommentFactory extends Factory
     public function definition(): array
     {
         return [
-            'comment'   => fake()->sentences(fake()->numberBetween(1, 3), true),
-            'user_id'   => User::factory(),
-            'course_id' => Course::factory(),
+            'comment'   => fake()->sentence(),
+            'user_id'   => User::inRandomOrder()->first()?->id ?? User::factory(),
+            'course_id' => Course::inRandomOrder()->first()?->id ?? Course::factory(),
         ];
     }
 }

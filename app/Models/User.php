@@ -25,6 +25,7 @@ class User extends Authenticatable
      *
      * @return array<string, string>
      */
+    protected $guard_name = 'api';
     public function courses(){
         return $this->hasMany(Course::class);
     }

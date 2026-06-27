@@ -25,11 +25,11 @@ class CourseFactory extends Factory
             'title'        => $title,
             'slug'         => Str::slug($title) . '-' . Str::random(5),
             'description'  => fake()->paragraphs(3, true),
-            'image'        => null,
+            'image'        => 'courses/default-course.png', 
             'price'        => fake()->randomFloat(2, 0, 500),
             'status'       => $status,
             'is_active'    => true,
-            'user_id'      => User::factory(),
+            'user_id'      => User::whereHas('roles', fn($q) => $q->where('name', 'Editor'))->inRandomOrder()->first()?->id ?? User::factory(),
             'published_at' => $status === CourseStatus::PUBLISHED ? fake()->dateTimeBetween('-6 months') : null,
         ];
     }

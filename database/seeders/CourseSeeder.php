@@ -18,27 +18,24 @@ class CourseSeeder extends Seeder
             $authors = User::all();
         }
  
+        // 10 Published Courses
         Course::factory(10)
             ->published()
-            ->create()
-            ->each(fn ($course) => $course->update([
-                'user_id' => $authors->random()->id,
-            ]));
+            ->create([
+                'user_id' => fn () => $authors->random()->id, 
+            ]);
  
         Course::factory(5)
             ->draft()
-            ->create()
-            ->each(fn ($course) => $course->update([
-                'user_id' => $authors->random()->id,
-            ]));
+            ->create([
+                'user_id' => fn () => $authors->random()->id,
+            ]);
  
         Course::factory(3)
             ->published()
             ->free()
-            ->create()
-            ->each(fn ($course) => $course->update([
-                'user_id' => $authors->random()->id,
-            ]));
+            ->create([
+                'user_id' => fn () => $authors->random()->id,
+            ]);
     }
 }
- 

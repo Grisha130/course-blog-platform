@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\BlogStatus;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Override;
@@ -11,7 +12,7 @@ use Override;
 #[Fillable(['title', 'slug', 'user_id', 'image', 'status', 'content', 'category_id', 'is_active', 'published_at'])]
 class Blog extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, HasFactory;
     public function user(){
         return $this->belongsTo(User::class);
     }

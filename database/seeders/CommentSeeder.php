@@ -17,6 +17,8 @@ class CommentSeeder extends Seeder
         $courses = Course::all();
         $blogs   = Blog::all();
  
+        if ($users->isEmpty()) return;
+ 
         foreach ($courses as $course) {
             CourseComment::factory(rand(2, 4))->create([
                 'course_id' => $course->id,

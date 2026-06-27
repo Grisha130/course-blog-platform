@@ -17,9 +17,9 @@ class BlogCommentFactory extends Factory
     public function definition(): array
     {
         return [
-            'comment' => fake()->sentences(fake()->numberBetween(1, 3), true),
-            'user_id' => User::factory(),
-            'blog_id' => Blog::factory(),
+            'comment' => fake()->sentence(),
+            'user_id' => User::inRandomOrder()->first()?->id ?? User::factory(),
+            'blog_id' => Blog::inRandomOrder()->first()?->id ?? Blog::factory(),
         ];
     }
 }

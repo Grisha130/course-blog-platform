@@ -26,11 +26,11 @@ class BlogFactory extends Factory
             'title'        => $title,
             'slug'         => Str::slug($title) . '-' . Str::random(5),
             'content'      => fake()->paragraphs(fake()->numberBetween(4, 8), true),
-            'image'        => null,
+            'image'        => 'blogs/default-blog.png', 
             'status'       => $status,
             'is_active'    => true,
-            'user_id'      => User::factory(),
-            'category_id'  => Category::factory(),
+            'user_id'      => User::whereHas('roles', fn($q) => $q->where('name', 'Editor'))->inRandomOrder()->first()?->id ?? User::factory(),
+            'category_id'  => Category::inRandomOrder()->first()?->id ?? Category::factory(),
             'published_at' => $status === BlogStatus::PUBLISHED ? fake()->dateTimeBetween('-6 months') : null,
         ];
     }
@@ -51,4 +51,3 @@ class BlogFactory extends Factory
         ]);
     }
 }
- 

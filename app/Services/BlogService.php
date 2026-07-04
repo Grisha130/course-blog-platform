@@ -76,4 +76,16 @@ class BlogService
         $blog->restore();
         return $blog->refresh()->load(['user', 'blogComments', 'tags', 'category']);
     }
+    public function allDeleted(array $filters = [])
+    {
+        $query = Blog::onlyTrashed();
+        $query = $this->blog_filter->blogFilter($query, $filters);
+        return $query
+            ->with(['user', 'blogComments', 'category', 'tags'])
+            ->paginate(10)
+            ->withQueryString();
+    }
+    public function forceDelete(Blog $blog){
+        return $blog->forceDelete();
+    }
 }

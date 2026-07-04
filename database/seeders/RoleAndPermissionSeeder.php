@@ -17,27 +17,16 @@ class RoleAndPermissionSeeder extends Seeder
             'manage-user-roles',
             'block-users',
             'delete-users',
+            'view-deleted-users',
             'restore-users',
+            'force-delete-users',
 
             'manage-categories',
             'manage-tags',
-            'manage-contacts',
+            
+            'manage-courses',
+            'manage-blogs',
 
-            'create-courses',
-            'edit-courses',
-            'block-courses',        
-            'unblock-courses',      
-            'delete-courses',       
-            'restore-courses',      
-            'force-delete-courses', 
-
-            'create-blogs',
-            'edit-blogs',
-            'block-blogs',         
-            'unblock-blogs',        
-            'delete-blogs',
-            'restore-blogs',
-            'force-delete-blogs',  
         ];
 
         foreach ($permissions as $permission) {
@@ -54,26 +43,11 @@ class RoleAndPermissionSeeder extends Seeder
         $admin->givePermissionTo([
             'manage-categories',
             'manage-tags',
-            'manage-contacts',
-            'view-users',
         ]);
 
         $editor->givePermissionTo([
-            'create-courses',
-            'edit-courses',
-            'block-courses',
-            'unblock-courses',
-            'delete-courses',
-            'restore-courses',
-            'force-delete-courses',
-
-            'create-blogs',
-            'edit-blogs',
-            'block-blogs',
-            'unblock-blogs',
-            'delete-blogs',
-            'restore-blogs',
-            'force-delete-blogs',
+            'manage-courses',
+            'manage-blogs',
         ]);
     }
 }

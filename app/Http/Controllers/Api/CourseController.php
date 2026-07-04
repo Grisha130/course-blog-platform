@@ -16,6 +16,7 @@ use App\Models\Course;
 use App\Services\CourseService;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class CourseController extends Controller
 {
@@ -57,13 +58,13 @@ class CourseController extends Controller
     }
     public function update(UpdateRequest $request, Course $course)
     {
-        $this->authorize('update', $course);
+        $this->authorize('update',$course);
         $course = $this->course_service->update($request->validated(), $course, $request->file('image'));
         return $this->success(new CourseResource($course), 'course updated', 200);
     }
     public function destroy(Course $course)
     {
-        $this->authorize('delete', $course);
+        $this->authorize('delete',$course);
         $course->delete();
         return $this->success(
             null,
@@ -89,4 +90,15 @@ class CourseController extends Controller
             'restored'
         );
     }   
+    public function allDeleted(FilterRequest $request){
+        $this->authorize('allDeleted', Course::class);
+        $courses = $this->course_service->allDeleted($request->validated());
+        return $this->paginate(CourseResource::collection($courses), 'all deleted');
+    }
+    public function forceDelete(Course $course){
+        $this->authorize('forceDelete', $course);
+        $course = $this->course_service->forceDelete($course);
+        return $this->success(null, 'force deleted course');
+
+    }
 }

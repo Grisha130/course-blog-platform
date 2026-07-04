@@ -63,4 +63,15 @@ class BlogController extends Controller
         $blog->load(['user', 'blogComments', 'category', 'tags']);
         return $this->success(new BlogResource($blog), 'one blog0');
     }
+    public function allDeleted(BlogFilterRequest $request){
+        $this->authorize('allDeleted', Blog::class);
+        $blogs = $this->blog_service->allDeleted($request->validated());
+        return $this->paginate(BlogResource::collection($blogs), 'all blogs deleted');
+    }
+    public function forceDelete(Blog $blog){
+        $this->authorize('forceDelete', $blog);
+        $blog = $this->blog_service->forceDelete($blog);
+        return $this->success(null, 'blog force deleted');
+
+    }
 }

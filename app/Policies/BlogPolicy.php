@@ -37,6 +37,9 @@ class BlogPolicy
      */
     public function update(User $user, Blog $blog): bool
     {
+        if($user->can('manage-blogs')){
+            return true;
+        }
         return $user->id === $blog->user_id;
     }
 
@@ -45,6 +48,9 @@ class BlogPolicy
      */
     public function delete(User $user, Blog $blog): bool
     {
+        if($user->can('manage-blogs')){
+            return true;
+        }
         return $user->id === $blog->user_id;
     }
 
@@ -53,6 +59,9 @@ class BlogPolicy
      */
     public function restore(User $user, Blog $blog): bool
     {
+        if($user->can('manage-blogs')){
+            return true;
+        }
         return $user->id === $blog->user_id;
     }
 
@@ -61,6 +70,10 @@ class BlogPolicy
      */
     public function forceDelete(User $user, Blog $blog): bool
     {
-        return false;
+        return $user->can('manage-blogs');
+    }
+    public function allDeleted(User $user): bool 
+    {
+        return $user->can('manage-blogs');
     }
 }

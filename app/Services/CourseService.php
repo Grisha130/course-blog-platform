@@ -63,8 +63,8 @@ class CourseService
         if (isset($data['status'])) {
             if ($data['status'] === CourseStatus::PUBLISHED->value) {
                 $data['published_at'] = now();
-            }else{
-                $data['published_at'] = null; 
+            } else {
+                $data['published_at'] = null;
             }
         }
 
@@ -91,5 +91,18 @@ class CourseService
             ->where('status', CourseStatus::ARCHIVED->value)
             ->with(['user', 'comments.user'])
             ->paginate(10);
+    }
+    public function allDeleted(array $filters = [])
+    {
+        $query = Course::onlyTrashed();
+        $query = $this->filter->courseFilter($query, $filters);
+        return $query
+            ->with(['user', 'comments.user'])
+            ->paginate(10)
+            ->withQueryString();
+    }
+    public function forceDelete(Course $course)
+    {
+        return  $course->forceDelete();
     }
 }

@@ -37,6 +37,9 @@ class CoursePolicy
      */
     public function update(User $user, Course $course): bool
     {
+        if($user->can('manage-courses')){
+            return true;
+        }
         return $user->id === $course->user_id;
     }
 
@@ -45,6 +48,9 @@ class CoursePolicy
      */
     public function delete(User $user, Course $course): bool
     {
+        if($user->can('manage-courses')){
+            return true;
+        }
         return $user->id === $course->user_id;
     }
 
@@ -53,7 +59,14 @@ class CoursePolicy
      */
     public function restore(User $user, Course $course): bool
     {
+        if($user->can('manage-courses')){
+            return true;
+        }
         return $user->id === $course->user_id;
+    }
+    public function allDeleted(User $user): bool
+    {
+        return $user->can('manage-courses');
     }
 
     /**
@@ -61,6 +74,6 @@ class CoursePolicy
      */
     public function forceDelete(User $user, Course $course): bool
     {
-        return false;
+        return $user->can('manage-courses');
     }
 }

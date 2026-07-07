@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Enums\BlogStatus;
 use App\Filters\BlogFilter;
+use App\Http\Traits\SanitizesInput;
 use App\Models\Blog;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -11,6 +12,7 @@ use Illuminate\Support\Str;
 
 class BlogService
 {
+    use SanitizesInput;
     public function __construct(
         protected BlogFilter $blog_filter
     ) {}
@@ -25,6 +27,7 @@ class BlogService
     }
     public function store(array $data, ?object $imageFile = null)
     {
+        $data = $this->sanitize($data, ['title', 'content']);
         $data['slug'] = Str::slug($data['title'] . '-' . uniqid());
         $data['user_id'] = auth()->user()->id;
         if ($imageFile) {
@@ -39,6 +42,7 @@ class BlogService
     }
     public function update(array $data, Blog $blog, ?object $imageFile = null)
     {
+        $data = $this->sanitize($data, ['title', 'content']);
         if (isset($data['title'])) {
             $data['slug'] = Str::slug($data['title'] . '-' . uniqid());
         }

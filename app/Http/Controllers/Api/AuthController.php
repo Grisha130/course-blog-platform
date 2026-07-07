@@ -34,6 +34,11 @@ class AuthController extends Controller
         if (!$user) {
             return $this->error('incorrect password or email', 401);
         }
+
+        if (!$user->is_active) {
+            return $this->error('your account has been blocked', 403);
+        }
+
         $token = $user->createToken('auth_token')->plainTextToken;
         $cookie = cookie('auth_token', $token, 1440, null, null, true, true);
         return $this->success(

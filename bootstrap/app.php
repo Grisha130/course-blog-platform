@@ -6,6 +6,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
+use App\Http\Middleware\EnsureUserIsActive;
 use Spatie\Permission\Middleware\PermissionMiddleware;
 use Spatie\Permission\Middleware\RoleMiddleware;
 
@@ -17,6 +18,7 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+         $middleware->throttleApi(); 
         $middleware->api(prepend: [
             AddTokenFromCookieToHeader::class,
             ForceJsonResponse::class
@@ -24,6 +26,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
         'role' => RoleMiddleware::class,
         'permission' => PermissionMiddleware::class,
+        'active' => EnsureUserIsActive::class,
     ]);
 
     })

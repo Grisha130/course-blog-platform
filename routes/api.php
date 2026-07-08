@@ -14,16 +14,14 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('/register', [AuthController::class, 'register'])->middleware('throttle:5,1');
 Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:login');
+Route::get('/email/verify/{id}/{hash}', [EmailVerificationController::class, 'verify'])
+    ->middleware(['signed', 'throttle:6,1'])->name('verification.verify');
+
 
 Route::middleware(['auth:sanctum', 'active'])->group(function () {
-
+    Route::post('/email/resend', [EmailVerificationController::class, 'resend'])->middleware('throttle:6,1');
     Route::post('/logout', [AuthController::class, 'logout']);
-    Route::get('/email/verify/{id}/{hash}', [EmailVerificationController::class, 'verify'])
-        ->middleware(['signed', 'throttle:6,1'])
-        ->name('verification.verify');
 
-    Route::post('/email/resend', [EmailVerificationController::class, 'resend'])
-        ->middleware('throttle:6,1');
 
     Route::middleware('verified')->group(function () {
 

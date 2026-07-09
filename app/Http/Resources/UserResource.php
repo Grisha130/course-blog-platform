@@ -21,6 +21,7 @@ class UserResource extends JsonResource
             'email'=>$this->email,
             'is_active'=>(bool) $this->is_active,
             'avatar'=>$this->avatar ? asset('storage/' . $this->avatar) : asset('storage/avatars/default-user-avatar.png'),
+            'email_verified_at'=>$this->email_verified_at,
             'role'=>$this->getRoleNames(),
             'permissions'=>$this->getAllPermissions()->pluck('name'),
             'created_at' => $this->created_at->toIso8601String(),

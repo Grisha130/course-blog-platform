@@ -24,7 +24,7 @@ class UpdatePasswordRequest extends FormRequest
     {
         return [
             'password'=>'required|string',
-            'new_password'=>'required|string|min:8|max:200'
+            'new_password'=>'required|string|confirmed|min:8|max:200'
         ];
     }
 }

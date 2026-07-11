@@ -8,30 +8,7 @@ use Illuminate\Auth\Access\Response;
 
 class BlogPolicy
 {
-    /**
-     * Determine whether the user can view any models.
-     */
-    public function viewAny(User $user): bool
-    {
-        return false;
-    }
-
-    /**
-     * Determine whether the user can view the model.
-     */
-    public function view(User $user, Blog $blog): bool
-    {
-        return false;
-    }
-
-    /**
-     * Determine whether the user can create models.
-     */
-    public function create(User $user): bool
-    {
-        return false;
-    }
-
+    
     /**
      * Determine whether the user can update the model.
      */
@@ -73,6 +50,14 @@ class BlogPolicy
         return $user->can('manage-blogs');
     }
     public function allDeleted(User $user): bool 
+    {
+        return $user->can('manage-blogs');
+    }
+    public function viewBlock(User $user): bool
+    {
+        return $user->can('manage-blogs');
+    }
+    public function block(User $user, Blog $blog): bool
     {
         return $user->can('manage-blogs');
     }

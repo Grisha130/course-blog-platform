@@ -94,6 +94,11 @@ Route::middleware(['auth:sanctum', 'active'])->group(function () {
             Route::get('/deleted-courses', [CourseController::class, 'allDeleted'])->withTrashed();
             Route::post('/deleted-courses/{course}/restore', [CourseController::class, 'restore'])->withTrashed();
             Route::delete('/deleted-courses/{course}/force-delete', [CourseController::class, 'forceDelete'])->withTrashed();
+            Route::get('/blocked-courses', [CourseController::class, 'blocked']);
+            Route::post('/courses/{course}/block', [CourseController::class, 'block']);
+
+            Route::get('/blocked-blogs', [BlogController::class, 'blocked']);
+            Route::post('/blogs/{blog}/block', [BlogController::class, 'block']);
 
             Route::get('deleted-blogs', [BlogController::class, 'allDeleted'])->withTrashed();
             Route::post('/deleted-blogs/{blog}/restore', [BlogController::class, 'restore'])->withTrashed();

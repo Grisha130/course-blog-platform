@@ -8,36 +8,15 @@ use Illuminate\Auth\Access\Response;
 
 class CoursePolicy
 {
-    /**
-     * Determine whether the user can view any models.
-     */
-    public function viewAny(User $user): bool
-    {
-        return false;
-    }
-
-    /**
-     * Determine whether the user can view the model.
-     */
-    public function view(User $user, Course $course): bool
-    {
-        return false;
-    }
-
-    /**
-     * Determine whether the user can create models.
-     */
-    public function create(User $user): bool
-    {
-        return false;
-    }
+  
+    
 
     /**
      * Determine whether the user can update the model.
      */
     public function update(User $user, Course $course): bool
     {
-        if($user->can('manage-courses')){
+        if ($user->can('manage-courses')) {
             return true;
         }
         return $user->id === $course->user_id;
@@ -48,7 +27,7 @@ class CoursePolicy
      */
     public function delete(User $user, Course $course): bool
     {
-        if($user->can('manage-courses')){
+        if ($user->can('manage-courses')) {
             return true;
         }
         return $user->id === $course->user_id;
@@ -59,7 +38,7 @@ class CoursePolicy
      */
     public function restore(User $user, Course $course): bool
     {
-        if($user->can('manage-courses')){
+        if ($user->can('manage-courses')) {
             return true;
         }
         return $user->id === $course->user_id;
@@ -73,6 +52,15 @@ class CoursePolicy
      * Determine whether the user can permanently delete the model.
      */
     public function forceDelete(User $user, Course $course): bool
+    {
+        return $user->can('manage-courses');
+    }
+    public function viewBlock(User $user): bool
+    {
+        return $user->can('manage-courses');
+    }
+
+    public function block(User $user, Course $course): bool
     {
         return $user->can('manage-courses');
     }

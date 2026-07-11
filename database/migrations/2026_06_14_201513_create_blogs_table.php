@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('status')->default('draft');
             $table->boolean('is_active')->default(true);
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('category_id')->constrained()->onDelete('cascade');
+            $table->foreignId('category_id')->nullable()->constrained()->onDelete('set null');
             $table->timestamp('published_at')->nullable();
             $table->softDeletes();
             $table->timestamps();

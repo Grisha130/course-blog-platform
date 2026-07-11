@@ -92,4 +92,20 @@ class BlogService
     public function forceDelete(Blog $blog){
         return $blog->forceDelete();
     }
+    public function blocked(array $filters = []){
+        $query = Blog::where('is_active', false);
+        $query = $this->blog_filter->blogFilter($query, $filters);
+        return $query
+            ->with(['user', 'blogComments', 'category', 'tags'])
+            ->paginate(10)
+            ->withQueryString();
+    }
+    public function block(Blog $blog){
+        if($blog->is_active === true){
+            $blog->update(['is_active'=>false]);
+        }else{
+            $blog->update(['is_active'=>true]);
+        }
+        return $blog->load(['user', 'blogComments', 'category', 'tags']);
+    }
 }

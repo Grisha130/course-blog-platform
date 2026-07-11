@@ -72,6 +72,16 @@ class BlogController extends Controller
         $this->authorize('forceDelete', $blog);
         $blog = $this->blog_service->forceDelete($blog);
         return $this->success(null, 'blog force deleted');
+    }
+    public function blocked(BlogFilterRequest $request){
+        $this->authorize('viewBlock', Blog::class);
+        $blogs = $this->blog_service->blocked($request->validated());
+        return $this->paginate(BlogResource::collection($blogs), 'all blocked blogs');
+    }
+    public function block(Blog $blog){
+        $this->authorize('block', $blog);
+        $blog = $this->blog_service->block($blog);
+        return $this->success(new BlogResource($blog), 'have done');
 
     }
 }

@@ -58,13 +58,13 @@ class CourseController extends Controller
     }
     public function update(UpdateRequest $request, Course $course)
     {
-        $this->authorize('update',$course);
+        $this->authorize('update', $course);
         $course = $this->course_service->update($request->validated(), $course, $request->file('image'));
         return $this->success(new CourseResource($course), 'course updated', 200);
     }
     public function destroy(Course $course)
     {
-        $this->authorize('delete',$course);
+        $this->authorize('delete', $course);
         $course->delete();
         return $this->success(
             null,
@@ -89,16 +89,29 @@ class CourseController extends Controller
             new CourseResource($restoredCourse),
             'restored'
         );
-    }   
-    public function allDeleted(FilterRequest $request){
+    }
+    public function allDeleted(FilterRequest $request)
+    {
         $this->authorize('allDeleted', Course::class);
         $courses = $this->course_service->allDeleted($request->validated());
         return $this->paginate(CourseResource::collection($courses), 'all deleted');
     }
-    public function forceDelete(Course $course){
+    public function forceDelete(Course $course)
+    {
         $this->authorize('forceDelete', $course);
         $course = $this->course_service->forceDelete($course);
         return $this->success(null, 'force deleted course');
-
+    }
+    public function blocked(FilterRequest $request)
+    {
+        $this->authorize('viewBlock', Course::class);
+        $courses = $this->course_service->blocked($request->validated());
+        return $this->paginate(CourseResource::collection($courses), 'all blocked courses');
+    }
+    public function block(Course $course)
+    {
+        $this->authorize('block', $course);
+        $course = $this->course_service->block($course);
+        return $this->success(new CourseResource($course), 'have done');
     }
 }

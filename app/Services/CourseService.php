@@ -108,4 +108,22 @@ class CourseService
     {
         return  $course->forceDelete();
     }
+    public function blocked(array $filters = [])
+    {
+        $query = Course::where('is_active', false);
+        $query = $this->filter->courseFilter($query, $filters);
+        return $query
+            ->with(['user', 'courseComments'])
+            ->paginate(10)
+            ->withQueryString();
+    }
+    public function block(Course $course)
+    {
+        if ($course->is_active === true) {
+            $course->update(['is_active' => false]);
+        } else {
+            $course->update(['is_active' => true]);
+        }
+        return $course->load(['user', 'courseComments']);
+    }
 }

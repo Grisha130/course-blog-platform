@@ -96,7 +96,8 @@ Route::middleware(['auth:sanctum', 'active'])->group(function () {
             Route::delete('/deleted-courses/{course}/force-delete', [CourseController::class, 'forceDelete'])->withTrashed();
             Route::get('/blocked-courses', [CourseController::class, 'blocked']);
             Route::post('/courses/{course}/block', [CourseController::class, 'block']);
-
+            Route::get('/manage-courses', [CourseController::class, 'adminIndex']);
+            Route::get('/manage-blogs', [BlogController::class, 'adminIndex']);
             Route::get('/blocked-blogs', [BlogController::class, 'blocked']);
             Route::post('/blogs/{blog}/block', [BlogController::class, 'block']);
 

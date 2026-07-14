@@ -21,6 +21,7 @@ class CourseResource extends JsonResource
             'description' => $this->description,
             'price' => $this->price,
             'status' => $this->status,
+            'is_active' => (bool) $this->is_active,
             'image' => $this->image ? asset('storage/' . $this->image) : null, 
             'published_at' => $this->published_at,
             'created_at' => $this->created_at->toIso8601String(),

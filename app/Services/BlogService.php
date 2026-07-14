@@ -19,6 +19,7 @@ class BlogService
     public function index(array $filters = [])
     {
         $query =  Blog::where('status', BlogStatus::PUBLISHED->value);
+        $query = $query->where('is_active', true);
         $query = $this->blog_filter->blogFilter($query, $filters);
         return $query
             ->with(['user', 'blogComments', 'category', 'tags'])
@@ -89,10 +90,12 @@ class BlogService
             ->paginate(10)
             ->withQueryString();
     }
-    public function forceDelete(Blog $blog){
+    public function forceDelete(Blog $blog)
+    {
         return $blog->forceDelete();
     }
-    public function blocked(array $filters = []){
+    public function blocked(array $filters = [])
+    {
         $query = Blog::where('is_active', false);
         $query = $this->blog_filter->blogFilter($query, $filters);
         return $query
@@ -100,12 +103,22 @@ class BlogService
             ->paginate(10)
             ->withQueryString();
     }
-    public function block(Blog $blog){
-        if($blog->is_active === true){
-            $blog->update(['is_active'=>false]);
-        }else{
-            $blog->update(['is_active'=>true]);
+    public function block(Blog $blog)
+    {
+        if ($blog->is_active === true) {
+            $blog->update(['is_active' => false]);
+        } else {
+            $blog->update(['is_active' => true]);
         }
         return $blog->load(['user', 'blogComments', 'category', 'tags']);
+    }
+    public function adminIndex(array $filters = [])
+    {
+        $query = Blog::query();
+        $query = $this->blog_filter->blogFilter($query, $filters);
+        return $query
+            ->with(['user', 'blogComments', 'category', 'tags'])
+            ->paginate(10)
+            ->withQueryString();
     }
 }

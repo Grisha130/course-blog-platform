@@ -22,6 +22,7 @@ class BlogResource extends JsonResource
                 'content' => $this->content,
                 'status' => $this->status,
                 'image' => $this->image ? asset('storage/' . $this->image) : null,
+                'is_active' => (bool) $this->is_active,
                 'category'=>new CategoryResource($this->category),
                 'tags'=>TagResource::collection($this->tags),
                 'published_at' => $this->published_at,

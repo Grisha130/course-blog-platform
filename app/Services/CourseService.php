@@ -20,6 +20,7 @@ class CourseService
     public function index(array $filters = [])
     {
         $query = Course::where('status', CourseStatus::PUBLISHED->value);
+        $query = $query->where('is_active', true);
         $query = $this->filter->courseFilter($query, $filters);
         return $query
             ->with(['user', 'comments.user'])
@@ -87,14 +88,7 @@ class CourseService
         $course->restore();
         return $course->refresh()->load(['user', 'comments.user']);
     }
-    public function archived()
-    {
-        $user = auth()->user();
-        return $user->courses()
-            ->where('status', CourseStatus::ARCHIVED->value)
-            ->with(['user', 'comments.user'])
-            ->paginate(10);
-    }
+
     public function allDeleted(array $filters = [])
     {
         $query = Course::onlyTrashed();
@@ -113,7 +107,7 @@ class CourseService
         $query = Course::where('is_active', false);
         $query = $this->filter->courseFilter($query, $filters);
         return $query
-            ->with(['user', 'courseComments'])
+            ->with(['user', 'comments.user'])
             ->paginate(10)
             ->withQueryString();
     }
@@ -124,6 +118,15 @@ class CourseService
         } else {
             $course->update(['is_active' => true]);
         }
-        return $course->load(['user', 'courseComments']);
+        return $course->load(['user', 'comments.user']);
+    }
+    public function adminIndex(array $filters = [])
+    {
+        $query = Course::query();
+        $query = $this->filter->myCourseFilter($query, $filters);
+        return $query
+            ->with(['user', 'comments.user'])
+            ->paginate(10)
+            ->withQueryString();
     }
 }

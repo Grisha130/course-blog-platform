@@ -44,6 +44,7 @@ class CourseController extends Controller
     }
     public function showOne(Course $course)
     {
+        $this->authorize('view', $course);
         $course->load(['user', 'comments.user']);
         return $this->success(
             new CourseResource($course),
@@ -113,5 +114,11 @@ class CourseController extends Controller
         $this->authorize('block', $course);
         $course = $this->course_service->block($course);
         return $this->success(new CourseResource($course), 'have done');
+    }
+    public function adminIndex(MyCourseFilterRequest $request)
+    {
+        $this->authorize('viewAll', Course::class);
+        $courses = $this->course_service->adminIndex($request->validated());
+        return $this->paginate(CourseResource::collection($courses), 'all courses (admin)');
     }
 }

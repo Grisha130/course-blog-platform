@@ -26,6 +26,8 @@ class AdminService
             'unblock' => true,
         };
         $user->update(['is_active' => $is_active]);
+        $user->blogs()->update(['is_active' => $is_active]);
+        $user->courses()->update(['is_active' => $is_active]);
         return $user;
     }
     public function addRole(array $data, User $user)
@@ -37,18 +39,20 @@ class AdminService
         }
         return $user;
     }
-    public function destroy(User $user){
+    public function destroy(User $user)
+    {
         $user->delete();
         return $user;
     }
-    public function deletedUsers(array $filters = []){
+    public function deletedUsers(array $filters = [])
+    {
         $query = User::onlyTrashed();
         $users = $this->user_filter->filter($query, $filters);
         return $users->paginate(5)->withQueryString();
     }
-    public function restore(User $user){
+    public function restore(User $user)
+    {
         $user->restore();
         return $user->fresh();
-
     }
 }

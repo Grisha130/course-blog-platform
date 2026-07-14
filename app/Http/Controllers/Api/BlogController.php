@@ -26,7 +26,7 @@ class BlogController extends Controller
     }
     public function store(StoreRequest $request)
     {
-        
+
         $blog = $this->blog_service->store($request->validated(), $request->file('image'));
         return $this->success(
             new BlogResource($blog),
@@ -46,42 +46,56 @@ class BlogController extends Controller
         $blog->delete();
         return $this->success(null, 'blog deleted');
     }
-    public function myBlogs(BlogFilterRequest $request){
+    public function myBlogs(BlogFilterRequest $request)
+    {
         $blogs = $this->blog_service->myBlogs($request->validated());
         return $this->paginate(BlogResource::collection($blogs), 'my blogs');
     }
-    public function deletedBlogs(){
+    public function deletedBlogs()
+    {
         $blogs = $this->blog_service->deletedBlogs();
         return $this->paginate(BlogResource::collection($blogs), 'my deleted blogs');
     }
-    public function restore(Blog $blog){
+    public function restore(Blog $blog)
+    {
         $this->authorize('restore', $blog);
         $blog = $this->blog_service->restore($blog);
         return $this->success(new BlogResource($blog), 'blog restored');
     }
-    public function showOne(Blog $blog){
+    public function showOne(Blog $blog)
+    {
+        $this->authorize('view', $blog);
         $blog->load(['user', 'blogComments', 'category', 'tags']);
         return $this->success(new BlogResource($blog), 'one blog0');
     }
-    public function allDeleted(BlogFilterRequest $request){
+    public function allDeleted(BlogFilterRequest $request)
+    {
         $this->authorize('allDeleted', Blog::class);
         $blogs = $this->blog_service->allDeleted($request->validated());
         return $this->paginate(BlogResource::collection($blogs), 'all blogs deleted');
     }
-    public function forceDelete(Blog $blog){
+    public function forceDelete(Blog $blog)
+    {
         $this->authorize('forceDelete', $blog);
         $blog = $this->blog_service->forceDelete($blog);
         return $this->success(null, 'blog force deleted');
     }
-    public function blocked(BlogFilterRequest $request){
+    public function blocked(BlogFilterRequest $request)
+    {
         $this->authorize('viewBlock', Blog::class);
         $blogs = $this->blog_service->blocked($request->validated());
         return $this->paginate(BlogResource::collection($blogs), 'all blocked blogs');
     }
-    public function block(Blog $blog){
+    public function block(Blog $blog)
+    {
         $this->authorize('block', $blog);
         $blog = $this->blog_service->block($blog);
         return $this->success(new BlogResource($blog), 'have done');
-
+    }
+    public function adminIndex(BlogFilterRequest $request)
+    {
+        $this->authorize('viewAll', Blog::class);
+        $blogs = $this->blog_service->adminIndex($request->validated());
+        return $this->paginate(BlogResource::collection($blogs), 'all blogs (admin)');
     }
 }

@@ -5,11 +5,22 @@ namespace App\Policies;
 use App\Models\Course;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
+use App\Enums\CourseStatus;
 
 class CoursePolicy
 {
-  
-    
+
+
+    public function view(User $user, Course $course): bool
+    {
+        if ($user->can('manage-courses')) {
+            return true;
+        }
+        if($course->is_active === true && $course->status === CourseStatus::PUBLISHED){
+            return true;
+        }
+        return $user->id === $course->user_id;
+    }
 
     /**
      * Determine whether the user can update the model.
@@ -61,6 +72,10 @@ class CoursePolicy
     }
 
     public function block(User $user, Course $course): bool
+    {
+        return $user->can('manage-courses');
+    }
+    public function viewAll(User $user): bool
     {
         return $user->can('manage-courses');
     }

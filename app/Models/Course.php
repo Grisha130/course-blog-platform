@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Override;
 
-#[Fillable(['title', 'slug', 'user_id', 'image', 'status', 'description', 'price', 'published_at'])]
+#[Fillable(['title', 'slug', 'user_id', 'image', 'status', 'description', 'price', 'published_at', 'is_active'])]
 class Course extends Model
 {
     use SoftDeletes, HasFactory;

@@ -29,7 +29,7 @@ class StoreRequest extends FormRequest
             'content' => 'required|string',
             'category_id'=>'required|exists:categories,id',
             'tags'=>'required|array',
-            'tags*'=>'exists:tags,id',
+            'tags.*'=>'exists:tags,id',
             'image' => 'required|image|mimes:jpeg,png,jpg,webp|max:2048',
             'status' => ['sometimes', Rule::enum(BlogStatus::class)],
         ];

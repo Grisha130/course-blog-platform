@@ -20,6 +20,7 @@ class BlogCommentController extends Controller
         protected BlogCommentService $blog_comment_service
     ){}
     public function comment(CommentStoreRequest $request, Blog $blog){
+         $this->authorize('view', $blog);
         $comment = $this->blog_comment_service->comment($request->validated(), $blog);
         return $this->success(new BlogCommentResource($comment), 'commented successfuly', 201);
     }

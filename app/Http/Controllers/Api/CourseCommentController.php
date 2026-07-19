@@ -20,6 +20,7 @@ class CourseCommentController extends Controller
     ) {}
     public function comment(CourseCommentRequest $request, Course $course)
     {
+        $this->authorize('view', $course);
         $comment = $this->comment_service->comment($request->validated(), $course);
         return $this->success(new CommentResource($comment), 'commented', 201);
     }

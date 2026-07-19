@@ -21,7 +21,7 @@ class AuthController extends Controller
         $user = $this->user_service->register($request->validated());
         $user->refresh();
         $token = $user->createToken('auth_token')->plainTextToken;
-        $cookie = cookie('auth_token', $token, 1440, null, null, true, true);
+        $cookie = cookie('auth_token', $token, 1440, null, null, true, true, false, 'none');
         return $this->success(
             new UserResource($user),
             'user created',
@@ -40,7 +40,7 @@ class AuthController extends Controller
         }
 
         $token = $user->createToken('auth_token')->plainTextToken;
-        $cookie = cookie('auth_token', $token, 1440, null, null, true, true);
+        $cookie = cookie('auth_token', $token, 1440, null, null, true, true, false, 'none');
         return $this->success(
             new UserResource($user),
             'logged in successfully',
